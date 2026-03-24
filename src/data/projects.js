@@ -1,0 +1,26 @@
+export const projects = [
+  {
+    id: 'getlini-eco',
+    number: '01',
+    title: 'Getliņi Eco',
+    subtitle: "Circular economy service for Riga's environmental education centre",
+    tags: ['Service Design', 'Blueprint', 'Research', 'Ideation', 'Circular Economy'],
+    mediaType: 'video',
+    videoUrl: 'https://player.vimeo.com/video/557581151',
+    image: null,
+    slug: 'getlini-eco',
+    accentColor: 'var(--color-tertiary)',
+  },
+  {
+    id: 'surfboard-payments',
+    number: '02',
+    title: 'Surfboard Payments',
+    subtitle: 'Redesigning the developer experience for a fintech payment platform',
+    tags: ['UX Design', 'Fintech', 'Interviews', 'Blueprint', 'Developer XP'],
+    mediaType: 'image',
+    videoUrl: null,
+    image: '/images/projects/surfboard-payments.jpg',
+    slug: 'surfboard-payments',
+    accentColor: 'var(--color-secondary)',
+  },
+]

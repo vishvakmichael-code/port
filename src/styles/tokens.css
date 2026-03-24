@@ -1,0 +1,113 @@
+:root {
+  /* BACKGROUNDS */
+  --color-bg:   #000000;
+  --color-bg-2: #0A0A0A;
+  --color-bg-3: #141414;
+
+  /* FOREGROUNDS */
+  --color-fg:     #F5F5F5;
+  --color-muted:  #666666;
+  --color-subtle: #222222;
+  --color-white:  #FFFFFF;
+  --color-black:  #000000;
+
+  /* BRAND ACCENTS */
+  --color-primary:   #FFD700;
+  --color-secondary: #FF9EEA;
+  --color-tertiary:  #42A5F5;
+
+  /* SEMANTIC ALIASES */
+  --color-accent:         var(--color-primary);
+  --color-accent-hover-1: var(--color-tertiary);
+  --color-accent-hover-2: var(--color-secondary);
+  --color-cs-accent:      var(--color-primary);
+
+  /* FONT FAMILIES */
+  --font-display: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading:    'Adelino', 'Helvetica Neue', Arial, sans-serif;
+  --font-signature:  'Rubik', sans-serif;
+  --font-body:    'Suisse Int\'l', 'Inter', system-ui, sans-serif;
+  --font-serif:   'Editorial New', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  /* TYPE SCALE */
+  --t-display:    clamp(96px, 12vw, 160px);
+  --t-display-md: clamp(108px, 14vw, 180px);
+  --t-display-lg: clamp(120px, 16vw, 210px);
+  --t-h1:         clamp(32px, 4vw, 52px);
+  --t-h2:         clamp(22px, 2.5vw, 32px);
+  --t-h3:         clamp(18px, 2vw, 22px);
+  --t-body-lg:    clamp(16px, 1.6vw, 20px);
+  --t-body:       clamp(14px, 1.2vw, 16px);
+  --t-label:      11px;
+  --t-mono:       11px;
+
+  /* TYPE METRICS */
+  --leading-tight:    0.88;
+  --leading-display:  0.92;
+  --leading-body:     1.6;
+  --leading-relaxed:  1.7;
+  --tracking-heading: 0.05em;
+  --tracking-tight:   -0.04em;
+  --tracking-display: -0.03em;
+  --tracking-body:    0em;
+  --tracking-label:   0.1em;
+  --tracking-wide:    0.08em;
+
+  /* SPACING — base 8 grid */
+  --space-1:  8px;
+  --space-2:  16px;
+  --space-3:  24px;
+  --space-4:  32px;
+  --space-6:  48px;
+  --space-8:  64px;
+  --space-12: 96px;
+  --space-16: 128px;
+  --space-24: 192px;
+
+  /* LAYOUT */
+  --section-padding:   clamp(80px, 12vw, 160px);
+  --page-padding-x:    clamp(24px, 5vw, 80px);
+  --content-max-width: 1400px;
+  --grid-gutter:       var(--space-4);
+  --nav-height:        80px;
+
+  /* BORDERS + RADIUS */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-pill: 100px;
+  --border-subtle: 1px solid var(--color-subtle);
+  --border-dim:    1px solid #1E1E1E;
+
+  /* ANIMATION EASINGS */
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth:   cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-sharp:    cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-in:       cubic-bezier(0.55, 0, 1, 0.45);
+
+  /* ANIMATION DURATIONS */
+  --duration-fast: 0.3s;
+  --duration-mid:  0.5s;
+  --duration-slow: 0.8s;
+
+  /* SHADOWS */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-nav:  0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* Z-INDEX */
+  --z-base:       0;
+  --z-content:    3;
+  --z-overlay:    10;
+  --z-nav:        1000;
+  --z-transition: 2000;
+  --z-cursor:     9999;
+}
+
+/* CASE STUDY ACCENT OVERRIDES */
+[data-case-study="getlini-eco"] {
+  --color-cs-accent: var(--color-tertiary);
+}
+[data-case-study="surfboard-payments"] {
+  --color-cs-accent: var(--color-secondary);
+}

@@ -1,0 +1,47 @@
+.who-i-am {
+  background: var(--color-bg);
+  padding-block: var(--section-padding);
+  padding-inline: var(--page-padding-x);
+  position: relative;
+  z-index: 2;
+}
+
+.who-i-am-inner {
+  max-width: 800px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.who-i-am-p1 {
+  font-family: var(--font-heading);
+  font-size: var(--t-h2);
+  font-weight: 400;
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-white);
+  text-align: center;
+}
+
+.who-i-am-p2 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--t-body-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-fg);
+  text-align: center;
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 767px) {
+  .who-i-am-inner {
+    text-align: left;
+  }
+
+  .who-i-am-p1 {
+    text-align: left;
+  }
+
+  .who-i-am-p2 {
+    text-align: left;
+  }
+}

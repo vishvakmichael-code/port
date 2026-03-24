@@ -1,0 +1,145 @@
+/* HeroHeadline — single DOM, CSS custom props swap at breakpoint */
+
+/* ── DESKTOP VALUES (default) ───────────────── */
+.hero-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+  line-height: 0.9;
+
+  --size-designing: 19px;
+  --x-designing:   0px;
+  --y-designing:  -29px;
+
+  --size-that:     19px;
+  --x-that:         7px;
+  --y-that:        -24px;
+
+  --size-line1:   136px;
+  --x-line1:      110px;
+
+  --size-line2:   136px;
+  --x-line2:       70px;
+
+  --size-line3:   150px;
+  --x-line3:      -65px;
+}
+
+/* ── MOBILE VALUES (<768px) ─────────────────── */
+@media (max-width: 767px) {
+  .hero-headline {
+    align-items: flex-start;
+    padding-inline: var(--space-3);
+
+    --size-designing: 12px;
+    --x-designing:   11px;
+    --y-designing:  -14px;
+
+    --size-that:     12px;
+    --x-that:       -14px;
+    --y-that:        -9px;
+
+    --size-line1:    63px;
+    --x-line1:       11px;
+
+    --size-line2:    60px;
+    --x-line2:        1px;
+
+    --size-line3:    63px;
+    --x-line3:        6px;
+  }
+}
+
+/* ── BASE STYLES ────────────────────────────── */
+.hero-headline .line {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-fg);
+  display: block;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+.hero-headline .annotation {
+  font-family: var(--font-signature);
+  font-weight: 300;
+  color: var(--color-fg);
+  letter-spacing: 0.04em;
+  padding-bottom: 0.1em;
+}
+
+.hero-headline .annotation-top {
+  align-self: flex-start;
+  margin-left: clamp(24px, 8vw, 120px);
+  margin-bottom: var(--space-1);
+}
+
+/* ── LINE POSITIONS ─────────────────────────── */
+.hero-headline .line-1 {
+  align-self: flex-start;
+  margin-left: clamp(24px, 8vw, 120px);
+}
+
+.hero-headline .line-2-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 16px;
+  align-self: center;
+  white-space: nowrap;
+}
+
+.hero-headline .line-2-row .line-2 {
+  display: inline;
+}
+
+.hero-headline .line-3 {
+  align-self: flex-end;
+  margin-right: clamp(24px, 8vw, 120px);
+}
+
+/* ── MOBILE OVERRIDES ───────────────────────── */
+@media (max-width: 767px) {
+  .hero-headline .annotation {
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+  }
+
+  .hero-headline .annotation-top {
+    margin-left: 0;
+  }
+
+  .hero-headline .line-1 {
+    align-self: flex-start;
+    margin-left: 0;
+    white-space: nowrap;
+  }
+
+  .hero-headline .line-2-row {
+    align-self: center;
+    gap: 8px;
+  }
+
+  .hero-headline .line-3 {
+    align-self: flex-end;
+    margin-right: 0;
+    white-space: normal;
+    text-align: right;
+  }
+
+  .hero-headline .line-2-row .line-2 {
+    display: inline;
+  }
+}
+
+/* ── MOBILE S (<480px) ──────────────────────── */
+@media (max-width: 479px) {
+  .hero-headline .annotation {
+    font-size: 10px;
+  }
+}

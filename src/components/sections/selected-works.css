@@ -1,0 +1,30 @@
+.selected-works {
+  background: var(--color-bg);
+  padding-block: var(--section-padding);
+  padding-inline: var(--page-padding-x);
+  position: relative;
+  z-index: 2;
+}
+
+.works-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-subtle);
+}
+
+.works-heading {
+  font-family: var(--font-heading);
+  font-size: var(--t-h1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-primary);
+}
+
+.works-count {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-subtle);
+}

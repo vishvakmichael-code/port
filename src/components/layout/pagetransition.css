@@ -1,0 +1,11 @@
+/* Page transition curtain */
+
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  background: var(--color-black);
+  z-index: var(--z-transition);
+  pointer-events: none;
+  transform-origin: top;
+  will-change: transform;
+}
