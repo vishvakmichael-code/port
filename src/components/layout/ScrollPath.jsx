@@ -34,7 +34,7 @@ export default function ScrollPath() {
             C 1100 1110, 1350 1080, 1440 1100
           "
           fill="none"
-          stroke="#42A5F5"
+          stroke="#001EBB"
           strokeWidth="2.5"
           strokeLinecap="round"
           style={{ pathLength }}

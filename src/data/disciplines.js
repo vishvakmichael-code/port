@@ -1,26 +1,48 @@
 export const disciplines = [
   {
-    number: '01',
-    name: 'Service Design',
-    description:
-      'Blueprinting complex service systems end-to-end. Mapping how people move through digital and physical touchpoints, finding the friction, and redesigning so things actually work.',
-    image: '/images/disciplines/service-design.jpg',
-    accent: 'var(--color-tertiary)',   // blue
+    id: 1,
+    text: 'Design sprint workshop facilitation',
+    highlight: 'workshop facilitation',
+    textAlign: 'left',
+    slideFrom: 'right',
+    illustration: {
+      src: '/images/illustrations/illustration-flower.svg',
+      position: 'right',
+      size: 200,
+      filter: 'brightness(0) saturate(100%) invert(85%) sepia(50%) saturate(500%) hue-rotate(5deg) brightness(105%)',
+    },
+    accent: 'var(--color-primary)',
   },
   {
-    number: '02',
-    name: 'Systems Thinking',
-    description:
-      'Translating tangled processes into clear structures. Research synthesis, journey mapping, insight patterns — turning what people do into what needs to change.',
-    image: '/images/disciplines/systems-thinking.jpg',
-    accent: 'var(--color-secondary)',  // pink
+    id: 2,
+    text: 'Synthesising across methods and turning it into decisions',
+    highlight: 'decisions',
+    textAlign: 'right',
+    slideFrom: 'left',
+    illustration: {
+      src: '/images/illustrations/illustration-halflines.svg',
+      position: 'left',
+      size: 180,
+      filter: 'brightness(0) saturate(100%) invert(20%) sepia(80%) saturate(600%) hue-rotate(210deg) brightness(110%)',
+    },
+    backgroundIllustration: {
+      src: '/images/illustrations/illustration-bg.svg',
+      opacity: 0.22,
+    },
+    accent: 'var(--color-tertiary)',
   },
   {
-    number: '03',
-    name: 'Facilitation',
-    description:
-      'Running workshops that generate real decisions. Designed thinking sessions for universities, companies, and cross-functional teams. 1,000+ participants trained in creative thinking.',
-    image: '/images/disciplines/facilitation.jpg',
-    accent: 'var(--color-primary)',    // yellow
+    id: 3,
+    text: 'Service concept prototypes & implementation roadmaps',
+    highlight: 'implementation roadmaps',
+    textAlign: 'left',
+    slideFrom: 'right',
+    illustration: {
+      src: '/images/illustrations/illustration-star.svg',
+      position: 'right',
+      size: 180,
+      filter: 'brightness(0) saturate(100%) invert(20%) sepia(80%) saturate(600%) hue-rotate(210deg) brightness(110%)',
+    },
+    accent: 'var(--color-tertiary)',
   },
 ]

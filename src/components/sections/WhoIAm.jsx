@@ -1,74 +1,65 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import './who-i-am.css'
 
-const paragraph1 = "Vishvak Rajendran is a service designer and systems thinker who blends qualitative research, service blueprinting, facilitation, and content strategy into experiences that work for the people living through them."
+const markedWords = [
+  { word: "Blending",        state: "bold" },
+  { word: "qualitative",     state: "highlight" },
+  { word: "research,",       state: "highlight" },
+  { word: "service",         state: "highlight" },
+  { word: "blueprinting,",   state: "highlight" },
+  { word: "facilitation,",   state: "highlight" },
+  { word: "and",             state: "normal" },
+  { word: "systems",         state: "highlight" },
+  { word: "mapping",         state: "highlight" },
+  { word: "into",            state: "bold" },
+  { word: "experiences",     state: "bold" },
+  { word: "that",            state: "bold" },
+  { word: "work",            state: "bold" },
+  { word: "for",             state: "normal" },
+  { word: "the",             state: "normal" },
+  { word: "people",          state: "mark" },
+  { word: "living",          state: "mark" },
+  { word: "through",         state: "mark" },
+  { word: "them.",           state: "mark" },
+]
 
-const paragraph2 = "He leads projects from discovery to delivery — running workshops, mapping ecosystems, and writing the words people actually read, with a deep instinct for finding where everyday services quietly stop making sense."
+const paragraph2 = "Working across the full arc of a project — from research and co-creation to blueprinting and delivery — with a particular instinct for the moments where human needs and organisational logic pull in opposite directions."
 
-const wordVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      delay: i * 0.02,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  }),
+// Group consecutive words with the same state into one chunk
+function groupWords(words) {
+  return words.reduce((acc, item) => {
+    const last = acc[acc.length - 1]
+    if (last && last.state === item.state) {
+      last.words.push(item.word)
+    } else {
+      acc.push({ state: item.state, words: [item.word] })
+    }
+    return acc
+  }, [])
 }
 
 export default function WhoIAm() {
-  const sectionRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [60, -60])
-  const y2 = useTransform(scrollYProgress, [0, 1], [40, -40])
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const groups = groupWords(markedWords)
 
   return (
-    <section ref={sectionRef} className="who-i-am">
+    <section id="sec-about" className="who-i-am">
       <div className="who-i-am-inner">
-        <motion.div style={{ y: y1, opacity }}>
-          <p className="who-i-am-p1" style={{ color: 'var(--color-white)' }}>
-            {paragraph1.split(' ').map((word, i) => (
-              <motion.span
-                key={i}
-                custom={i}
-                variants={wordVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-80px' }}
-                style={{
-                  display: 'inline-block',
-                  marginRight: '0.28em',
-                  marginBottom: '0.1em',
-                }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </p>
-        </motion.div>
-
-        <motion.p
-          className="who-i-am-p2"
-          style={{ y: y2, color: 'var(--color-fg)' }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{
-            duration: 0.8,
-            delay: 0.2,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          {paragraph2}
-        </motion.p>
+        <p className="who-i-am-p1">
+          {groups.map((group, i) =>
+            group.state === 'mark' ? (
+              // Single span = one continuous background, no gaps
+              <span key={i} className="wia-mark-group">
+                {group.words.join(' ')}
+              </span>
+            ) : (
+              group.words.map((word, j) => (
+                <span key={`${i}-${j}`} className={`wia-word wia-word--${group.state}`}>
+                  {word}
+                </span>
+              ))
+            )
+          )}
+        </p>
+        <p className="who-i-am-p2">{paragraph2}</p>
       </div>
     </section>
   )

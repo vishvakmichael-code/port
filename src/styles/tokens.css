@@ -1,23 +1,19 @@
 :root {
-  /* BACKGROUNDS */
-  --color-bg:   #000000;
-  --color-bg-2: #0A0A0A;
-  --color-bg-3: #141414;
-
-  /* FOREGROUNDS */
-  --color-fg:     #F5F5F5;
-  --color-muted:  #666666;
-  --color-subtle: #222222;
-  --color-white:  #FFFFFF;
-  --color-black:  #000000;
-
-  /* BRAND ACCENTS */
+  /* DARK MODE — default */
+  --color-bg:        #000000;
+  --color-bg-2:      #0A0A0A;
+  --color-bg-3:      #141414;
+  --color-fg:        #F5F5F5;
+  --color-muted:     #666666;
+  --color-subtle:    #222222;
+  --color-white:     #FFFFFF;
+  --color-black:     #000000;
   --color-primary:   #FFD700;
   --color-secondary: #FF9EEA;
-  --color-tertiary:  #42A5F5;
+  --color-tertiary:  #001EBB;
+  --color-accent:    var(--color-primary);
 
   /* SEMANTIC ALIASES */
-  --color-accent:         var(--color-primary);
   --color-accent-hover-1: var(--color-tertiary);
   --color-accent-hover-2: var(--color-secondary);
   --color-cs-accent:      var(--color-primary);
@@ -26,7 +22,9 @@
   --font-display: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Arial, sans-serif;
   --font-heading:    'Adelino', 'Helvetica Neue', Arial, sans-serif;
   --font-signature:  'Rubik', sans-serif;
-  --font-body:    'Suisse Int\'l', 'Inter', system-ui, sans-serif;
+  --font-body:    'Itim', cursive;
+  --font-itim:    'Itim', cursive;
+  --font-inter:   'Itim', cursive;
   --font-serif:   'Editorial New', Georgia, serif;
   --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
 
@@ -66,11 +64,14 @@
   --space-24: 192px;
 
   /* LAYOUT */
-  --section-padding:   clamp(80px, 12vw, 160px);
+  --section-padding-top:    clamp(48px, 6vw, 96px);
+  --section-padding-bottom: clamp(48px, 6vw, 96px);
   --page-padding-x:    clamp(24px, 5vw, 80px);
   --content-max-width: 1400px;
   --grid-gutter:       var(--space-4);
   --nav-height:        80px;
+  --nav-bg-scrolled:   rgba(0, 0, 0, 0.85);
+  --nav-bg-default:    transparent;
 
   /* BORDERS + RADIUS */
   --radius-sm:   4px;
@@ -102,6 +103,31 @@
   --z-nav:        1000;
   --z-transition: 2000;
   --z-cursor:     9999;
+}
+
+/* LIGHT MODE */
+html.light {
+  --color-bg:        #FFFFFF;
+  --color-bg-2:      #F5F5F5;
+  --color-bg-3:      #EBEBEB;
+  --color-fg:        #0A0A0A;
+  --color-muted:     #555555;
+  --color-subtle:    #CCCCCC;
+  --color-white:     #FFFFFF;
+  --color-black:     #000000;
+  --color-primary:   #FFD700;
+  --color-secondary: #FF9EEA;
+  --color-tertiary:  #001EBB;
+  --color-accent:    var(--color-primary);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.9);
+  --nav-bg-default:  transparent;
+}
+
+html.light .hero-signature__name {
+  color: var(--color-fg);
+}
+html.light .hero-signature__descriptor {
+  color: var(--color-muted);
 }
 
 /* CASE STUDY ACCENT OVERRIDES */

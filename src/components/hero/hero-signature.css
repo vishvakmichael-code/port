@@ -9,29 +9,28 @@
 }
 
 .hero-signature__name {
-  font-family: var(--font-signature);
-  font-weight: 300;
-  font-size: 22px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: 0.02em;
   color: var(--color-primary);
 }
 
 .hero-signature__descriptor {
-  font-family: var(--font-signature);
-  font-weight: 300;
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  font-family: var(--font-itim);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 0.01em;
   color: var(--color-fg);
   font-style: normal;
 }
 
 @media (max-width: 767px) {
   .hero-signature__name {
-    font-size: 12px;
+    font-size: 22px;
   }
 
   .hero-signature__descriptor {
-    font-size: 11px;
+    font-size: 16px;
   }
 }

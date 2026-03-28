@@ -6,8 +6,16 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Itim';
+  src: url('../assets/fonts/Adelino-Font/Itim-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* FONT IMPORTS — must be first */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Rubik:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Rubik:wght@300;400;500&display=swap');
 
 @import './tokens.css';
 @import 'tailwindcss';
@@ -58,7 +66,8 @@ html.cursor-native * { cursor: pointer !important; }
 
 /* SECTION BASE */
 .section {
-  padding-block: var(--section-padding);
+  padding-top: var(--section-padding-top);
+  padding-bottom: var(--section-padding-bottom);
   padding-inline: var(--page-padding-x);
   background: var(--color-bg);
   position: relative;
@@ -121,6 +130,62 @@ canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+
+/* FONT OVERRIDES — force Itim on body/description text */
+.who-i-am-p2,
+.who-i-am p,
+.discipline-description {
+  font-family: 'Itim', cursive !important;
+  font-style: normal !important;
+}
+
+/* FOOTER — always black in both modes */
+html.light footer {
+  background: #000000 !important;
+}
+html.light footer p,
+html.light footer a,
+html.light footer button {
+  --color-fg: #F5F5F5;
+}
+
+/* VIEW TRANSITIONS — theme toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* TESTIMONIAL GRID */
+@media (max-width: 1023px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 767px) {
+  .testimonial-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* SKILL CARD GRID */
+.skill-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 1023px) {
+  .skill-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .skill-card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* REDUCED MOTION */

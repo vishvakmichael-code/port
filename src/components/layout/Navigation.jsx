@@ -181,7 +181,7 @@ export default function Navigation() {
           justifyContent: 'space-between',
         }}
         animate={{
-          background: scrolled ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0)',
+          background: scrolled ? 'var(--nav-bg-scrolled)' : 'var(--nav-bg-default)',
           backdropFilter: scrolled ? 'blur(12px)' : 'blur(0px)',
         }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
@@ -191,30 +191,26 @@ export default function Navigation() {
           ref={logoRef}
           to="/"
           style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '18px',
-            letterSpacing: '-0.02em',
-            fontWeight: 600,
-            color: 'var(--color-fg)',
-            textDecoration: 'none',
             display: 'flex',
-            alignItems: 'flex-start',
-            gap: '2px',
+            alignItems: 'center',
+            gap: '10px',
+            textDecoration: 'none',
           }}
         >
-          VR
-          <span style={{
-            fontSize: '10px',
-            color: 'var(--color-primary)',
-            lineHeight: 1,
-            marginTop: '2px',
-          }}>
-            *
-          </span>
+          <img
+            src="/images/logo.svg"
+            alt="Vishvak Rajendran"
+            style={{
+              width: '28px',
+              height: '28px',
+              objectFit: 'contain',
+              filter: 'invert(1)',
+            }}
+          />
         </Link>
 
-        {/* Desktop links */}
-        <nav
+        {/* Desktop links + theme toggler */}
+        <div
           style={{
             display: 'flex',
             gap: 'var(--space-6)',
@@ -230,7 +226,7 @@ export default function Navigation() {
               isActive={location.pathname === href}
             />
           ))}
-        </nav>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -291,7 +287,7 @@ export default function Navigation() {
       {/* Mobile responsive styles */}
       <style>{`
         @media (max-width: 767px) {
-          .nav-desktop  { display: none !important; }
+          .nav-desktop   { display: none !important; }
           .nav-hamburger { display: flex !important; }
         }
       `}</style>

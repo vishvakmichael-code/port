@@ -3,6 +3,7 @@ import { CursorProvider } from './components/cursor/CursorContext'
 import Cursor from './components/cursor/Cursor'
 import Navigation from './components/layout/Navigation'
 import PageTransition from './components/layout/PageTransition'
+import Footer from './components/layout/Footer'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import CaseStudy from './pages/CaseStudy'
@@ -27,6 +28,7 @@ function AppInner() {
           <Route path="/contact"    element={<Contact />}   />
         </Routes>
       </PageTransition>
+      <Footer />
     </PageLoader>
   )
 }

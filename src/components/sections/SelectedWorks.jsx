@@ -94,7 +94,7 @@ function ViewAllButton() {
 
 export default function SelectedWorks() {
   return (
-    <section className="selected-works">
+    <section id="sec-work" className="selected-works">
       <div className="works-header">
         <span className="works-heading">Selected Works</span>
         <span className="works-count">0{projects.length} Projects</span>
