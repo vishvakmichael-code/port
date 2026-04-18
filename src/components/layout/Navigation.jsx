@@ -273,7 +273,7 @@ export default function Navigation() {
             style={{
               width: '100%',
               height: '100%',
-              background: 'var(--color-fg)',
+              background: 'var(--color-primary)',
               transformOrigin: 'left',
               scaleX: progress,
             }}

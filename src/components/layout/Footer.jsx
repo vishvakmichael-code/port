@@ -121,25 +121,26 @@ export default function Footer() {
       {/* CTA headline */}
       <div style={{
         paddingTop: 'var(--space-12)',
-        paddingBottom: 'var(--space-8)',
+        paddingBottom: 'var(--space-10)',
         paddingInline: 'var(--page-padding-x)',
-        borderBottom: '1px solid #222222',
+        borderBottom: '1px solid #1A1A1A',
       }}>
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(20px, 2.5vw, 32px)',
+            fontSize: 'clamp(28px, 4vw, 56px)',
             fontWeight: 600,
-            letterSpacing: 'var(--tracking-heading)',
+            letterSpacing: 'var(--tracking-tight)',
+            lineHeight: 1.05,
             color: 'var(--color-primary)',
             margin: 0,
           }}
         >
-          You are here, might as well say hi!
+          You are here,<br />might as well say hi.
         </motion.p>
       </div>
 

@@ -13,6 +13,8 @@ export default function PageTransition({ children }) {
       return
     }
 
+    window.scrollTo(0, 0)
+
     const curtain = curtainRef.current
     if (!curtain) return
 

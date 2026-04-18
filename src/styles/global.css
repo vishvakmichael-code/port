@@ -15,7 +15,7 @@
 }
 
 /* FONT IMPORTS — must be first */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Rubik:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Rubik:wght@300;400;500&display=swap');
 
 @import './tokens.css';
 @import 'tailwindcss';
@@ -32,6 +32,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: auto; /* Lenis handles smooth scroll */
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  font-variant-ligatures: common-ligatures;
 }
 
 body {
@@ -41,6 +43,26 @@ body {
   font-size: var(--t-body);
   line-height: var(--leading-body);
   overflow-x: hidden;
+}
+
+/* ── Grain texture overlay ─────────────────────────────────── */
+/* Sits above all content but below the cursor */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 1);
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* Slightly reduce grain in light mode */
+html.light body::after {
+  opacity: 0.018;
 }
 
 /* Hide system cursor — custom cursor replaces it */
@@ -62,6 +84,33 @@ html.cursor-native * { cursor: pointer !important; }
 ::selection {
   background: var(--color-primary);
   color: var(--color-black);
+}
+
+/* FOCUS VISIBLE — keyboard nav indicator */
+:focus-visible {
+  outline: 1.5px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* LINK DEFAULTS */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s var(--ease-smooth);
+}
+
+/* HEADING RENDERING */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* PARAGRAPH RENDERING */
+p {
+  text-wrap: pretty;
 }
 
 /* SECTION BASE */

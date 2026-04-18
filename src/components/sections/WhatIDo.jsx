@@ -178,7 +178,7 @@ export default function WhatIDo() {
           paddingInline: 'var(--page-padding-x)',
           marginBottom: 'var(--space-6)',
           fontFamily: 'var(--font-itim)',
-          color: 'var(--color-tertiary)',
+          color: 'var(--color-primary)',
         }}
       >
         Oh and I am really good at these

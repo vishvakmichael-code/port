@@ -6,6 +6,7 @@
   --color-fg:        #F5F5F5;
   --color-muted:     #666666;
   --color-subtle:    #222222;
+  --grid-line:       rgba(255, 255, 255, 0.035);
   --color-white:     #FFFFFF;
   --color-black:     #000000;
   --color-primary:   #FFD700;
@@ -19,14 +20,14 @@
   --color-cs-accent:      var(--color-primary);
 
   /* FONT FAMILIES */
-  --font-display: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Arial, sans-serif;
-  --font-heading:    'Adelino', 'Helvetica Neue', Arial, sans-serif;
-  --font-signature:  'Rubik', sans-serif;
-  --font-body:    'Itim', cursive;
-  --font-itim:    'Itim', cursive;
-  --font-inter:   'Itim', cursive;
-  --font-serif:   'Editorial New', Georgia, serif;
-  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --font-display:   'Adelino', 'Helvetica Neue', sans-serif;
+  --font-heading:   'Adelino', 'Helvetica Neue', sans-serif;
+  --font-signature: 'Rubik', sans-serif;
+  --font-body:      'Itim', cursive;
+  --font-itim:      'Itim', cursive;
+  --font-inter:     'IBM Plex Mono', 'Courier New', monospace;
+  --font-serif:     Georgia, serif;
+  --font-mono:      'IBM Plex Mono', 'Courier New', monospace;
 
   /* TYPE SCALE */
   --t-display:    clamp(96px, 12vw, 160px);
@@ -57,9 +58,13 @@
   --space-2:  16px;
   --space-3:  24px;
   --space-4:  32px;
+  --space-5:  40px;
   --space-6:  48px;
+  --space-7:  56px;
   --space-8:  64px;
+  --space-10: 80px;
   --space-12: 96px;
+  --space-14: 112px;
   --space-16: 128px;
   --space-24: 192px;
 
@@ -93,8 +98,11 @@
   --duration-slow: 0.8s;
 
   /* SHADOWS */
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
-  --shadow-nav:  0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-card:  0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-lg:    0 24px 64px rgba(0, 0, 0, 0.5);
+  --shadow-nav:   0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-glow:  0 0 60px rgba(255, 215, 0, 0.08);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   /* Z-INDEX */
   --z-base:       0;
@@ -113,6 +121,7 @@ html.light {
   --color-fg:        #0A0A0A;
   --color-muted:     #555555;
   --color-subtle:    #CCCCCC;
+  --grid-line:       rgba(0, 0, 0, 0.06);
   --color-white:     #FFFFFF;
   --color-black:     #000000;
   --color-primary:   #FFD700;

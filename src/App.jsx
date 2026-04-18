@@ -10,6 +10,7 @@ import CaseStudy from './pages/CaseStudy'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import PageLoader from './components/layout/PageLoader'
+import { SVGFollower } from './components/ui/svg-follower'
 import { useLenis } from './hooks/useLenis'
 
 function AppInner() {
@@ -17,6 +18,7 @@ function AppInner() {
 
   return (
     <PageLoader>
+      <SVGFollower />
       <Cursor />
       <Navigation />
       <PageTransition>

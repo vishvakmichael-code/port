@@ -43,7 +43,7 @@ function ProjectMedia({ project, hovered }) {
             src={`${project.videoUrl}?autoplay=1&loop=1&muted=1&background=1`}
             allow="autoplay; fullscreen"
             frameBorder="0"
-            style={{ width: '100%', height: '100%', display: 'block', border: 'none' }}
+            style={{ width: '100%', height: '100%', display: 'block', border: 'none', pointerEvents: 'none' }}
             title={project.title}
           />
         </motion.div>

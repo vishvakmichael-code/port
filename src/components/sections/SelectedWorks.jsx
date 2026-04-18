@@ -31,7 +31,7 @@ function ViewAllButton() {
         }}
         transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          border: '2.5px solid var(--color-white)',
+          border: '1.5px solid var(--color-subtle)',
           borderRadius: 'var(--radius-pill)',
           paddingTop: '14px',
           paddingBottom: '14px',
