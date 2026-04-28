@@ -1,45 +1,157 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { caseStudies } from '../data/case-studies'
 import { useIsMobile } from '../hooks/useMediaQuery'
 
-const ARIAL = "'Arial', sans-serif"
-const MONO  = 'var(--font-mono)'
-const SERIF = 'var(--font-serif)'
-const ITIM  = 'var(--font-itim)'
+const ARIAL   = "'Arial', sans-serif"
+const CRIMSON = 'var(--font-crimson)'
+const SERIF   = 'var(--font-serif)'
+const ITIM    = 'var(--font-itim)'
+
+// editorial type scale
+const BODY    = '14px'
+const BODY_LG = '15px'
+const LABEL   = '11px'   // slightly larger for Crimson Pro serifs
+const TRACK   = '-0.01em'
+
+const FG_PRIMARY = 'var(--color-fg)'
+const FG_MUTED   = 'var(--color-muted)'
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] },
 })
 
 const TABS = ['Decisions', 'Challenges', 'Process']
 
+const TOC_ITEMS = [
+  { id: 'cs-intro',     label: 'Intro' },
+  { id: 'cs-challenge', label: 'Challenge' },
+  { id: 'cs-diagnosis', label: 'Diagnosis' },
+  { id: 'cs-research',  label: 'Research' },
+  { id: 'cs-outcomes',  label: 'Outcomes' },
+]
+
 // ─── sub-components ────────────────────────────────────────────────────────
+
+const TAB_TOC_ITEMS = [
+  { index: 0, label: 'Decisions' },
+  { index: 1, label: 'Challenges' },
+  { index: 2, label: 'Process' },
+]
+
+function TableOfContents({ activeId, accent, visible, thinkingOpen, activeTab, onTabChange, onOpenThinking }) {
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const handleTabClick = (index) => {
+    onTabChange(index)
+    if (!thinkingOpen) {
+      onOpenThinking()
+    } else {
+      document.getElementById('cs-thinking')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  return (
+    <nav style={{
+      position: 'fixed',
+      left: 'max(16px, calc(50vw - 650px))',
+      top: 'calc(var(--nav-height) + 3.5rem)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '14px',
+      zIndex: 5,
+      opacity: visible ? 1 : 0,
+      pointerEvents: visible ? 'auto' : 'none',
+      transition: 'opacity 0.3s ease',
+    }}>
+      {TOC_ITEMS.map(({ id, label }) => {
+        const isActive = activeId === id
+        return (
+          <button
+            key={id}
+            onClick={() => scrollTo(id)}
+            style={{
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: isActive ? 700 : 400,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: isActive ? accent : FG_MUTED,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              textAlign: 'left',
+              transition: 'color 0.25s',
+              opacity: isActive ? 1 : 0.55,
+            }}
+          >
+            {label}
+          </button>
+        )
+      })}
+
+      {/* Separator + tab items */}
+      <div style={{ borderTop: '1px solid var(--color-subtle)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {TAB_TOC_ITEMS.map(({ index, label }) => {
+          const isActive = thinkingOpen && activeTab === index
+          return (
+            <button
+              key={label}
+              onClick={() => handleTabClick(index)}
+              style={{
+                fontFamily: CRIMSON,
+                fontSize: LABEL,
+                fontWeight: isActive ? 700 : 400,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: isActive ? accent : FG_MUTED,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                textAlign: 'left',
+                transition: 'color 0.25s',
+                opacity: isActive ? 1 : 0.4,
+              }}
+            >
+              {label}
+            </button>
+          )
+        })}
+      </div>
+    </nav>
+  )
+}
 
 function MetaCell({ label, value }) {
   return (
     <div>
       <p style={{
-        fontFamily: MONO,
-        fontSize: '0.62rem',
+        fontFamily: CRIMSON,
+        fontSize: LABEL,
+        fontWeight: 600,
         textTransform: 'uppercase',
         letterSpacing: '0.1em',
-        color: 'var(--color-muted)',
-        margin: '0 0 5px 0',
+        color: FG_MUTED,
+        margin: '0 0 4px 0',
       }}>
         {label}
       </p>
       <p style={{
         fontFamily: ARIAL,
-        fontSize: 'var(--t-body)',
+        fontSize: BODY,
         fontWeight: 500,
-        color: 'var(--color-fg)',
+        letterSpacing: TRACK,
+        color: FG_PRIMARY,
         margin: 0,
-        lineHeight: 1.3,
+        lineHeight: 1.4,
       }}>
         {value}
       </p>
@@ -50,12 +162,13 @@ function MetaCell({ label, value }) {
 function SectionLabel({ children, accent }) {
   return (
     <p style={{
-      fontFamily: MONO,
-      fontSize: '0.62rem',
-      letterSpacing: '0.12em',
+      fontFamily: CRIMSON,
+      fontSize: '0.78rem',
+      fontWeight: 700,
+      letterSpacing: '0.18em',
       textTransform: 'uppercase',
-      color: accent || 'var(--color-muted)',
-      margin: '0 0 var(--space-3) 0',
+      color: accent || FG_MUTED,
+      margin: '0 0 20px 0',
     }}>
       {children}
     </p>
@@ -68,23 +181,23 @@ function DecisionsTab({ decisions, accent, isMobile }) {
       {decisions.map((d, i) => (
         <motion.div
           key={i}
-          {...fadeUp(i * 0.1)}
+          {...fadeUp(i * 0.08)}
           style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '3rem 1fr' : '3rem 1fr 1fr',
+            gridTemplateColumns: isMobile ? '2.5rem 1fr' : '2.5rem 1fr 1fr',
             gap: '2rem',
             paddingBlock: '2.5rem',
             borderBottom: '1px solid var(--color-subtle)',
             alignItems: 'start',
           }}
         >
-          {/* Column 1 — large background number */}
+          {/* Col 1 — faint number */}
           <div style={{
-            fontFamily: SERIF,
+            fontFamily: CRIMSON,
             fontSize: '3rem',
-            fontWeight: 900,
+            fontWeight: 700,
             color: accent,
-            opacity: 0.08,
+            opacity: 0.1,
             lineHeight: 1,
             userSelect: 'none',
             paddingTop: '2px',
@@ -92,59 +205,65 @@ function DecisionsTab({ decisions, accent, isMobile }) {
             {d.number}
           </div>
 
-          {/* Column 2 — decision content */}
+          {/* Col 2 — text */}
           <div>
             <p style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 600,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              color: 'var(--color-muted)',
-              margin: '0 0 var(--space-3) 0',
+              color: FG_MUTED,
+              margin: '0 0 12px 0',
             }}>
               Decision {d.number}
             </p>
             <h3 style={{
-              fontFamily: SERIF,
-              fontSize: '1.3rem',
+              fontFamily: CRIMSON,
+              fontSize: '1.4rem',
               fontWeight: 700,
-              color: 'var(--color-fg)',
-              margin: '0 0 var(--space-4) 0',
+              letterSpacing: TRACK,
+              color: FG_PRIMARY,
+              margin: '0 0 16px 0',
               lineHeight: 1.2,
             }}>
               {d.title}
             </h3>
             <p style={{
               fontFamily: ITIM,
-              fontSize: '0.97rem',
-              lineHeight: 'var(--leading-relaxed)',
-              color: 'var(--color-fg)',
+              fontSize: BODY_LG,
+              letterSpacing: TRACK,
+              lineHeight: 1.7,
+              color: FG_PRIMARY,
               margin: 0,
+              opacity: 0.85,
             }}>
               {d.body}
             </p>
           </div>
 
-          {/* Column 3 — artifact placeholder (hides on mobile) */}
+          {/* Col 3 — artifact (hides on mobile) */}
           {!isMobile && (
             <div style={{
               aspectRatio: '4 / 3',
               background: 'var(--color-bg-3)',
-              borderRadius: 'var(--radius-md)',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}>
               {d.artifact && (
                 <p style={{
-                  fontFamily: MONO,
-                  fontSize: '0.62rem',
-                  letterSpacing: '0.08em',
+                  fontFamily: CRIMSON,
+                  fontSize: LABEL,
+                  fontWeight: 400,
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: 'var(--color-muted)',
+                  color: FG_MUTED,
                   margin: 0,
                   textAlign: 'center',
-                  padding: 'var(--space-4)',
+                  padding: '24px',
+                  opacity: 0.6,
                 }}>
                   {d.artifact}
                 </p>
@@ -160,40 +279,42 @@ function DecisionsTab({ decisions, accent, isMobile }) {
 function ChallengesTab({ challenges, challengeReflection }) {
   return (
     <div>
-      {/* 2×2 grid */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '3rem',
-        marginBottom: 'var(--space-8)',
+        marginBottom: '4rem',
       }}>
         {challenges.map((c, i) => (
           <motion.div key={i} {...fadeUp(i * 0.08)}>
             <p style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 600,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: 'rgba(245,245,245,0.35)',
-              margin: '0 0 var(--space-2) 0',
+              margin: '0 0 10px 0',
             }}>
               {c.number}
             </p>
             <h4 style={{
-              fontFamily: SERIF,
-              fontSize: 'clamp(1.1rem, 1.8vw, 1.375rem)',
+              fontFamily: CRIMSON,
+              fontSize: '1.3rem',
               fontWeight: 700,
+              letterSpacing: TRACK,
               color: '#F5F5F5',
-              margin: '0 0 var(--space-3) 0',
+              margin: '0 0 12px 0',
               lineHeight: 1.25,
             }}>
               {c.title}
             </h4>
             <p style={{
               fontFamily: ITIM,
-              fontSize: '0.88rem',
-              lineHeight: 'var(--leading-relaxed)',
-              color: 'rgba(245,245,245,0.6)',
+              fontSize: BODY_LG,
+              letterSpacing: TRACK,
+              lineHeight: 1.7,
+              color: 'rgba(245,245,245,0.65)',
               margin: 0,
             }}>
               {c.body}
@@ -202,33 +323,35 @@ function ChallengesTab({ challenges, challengeReflection }) {
         ))}
       </div>
 
-      {/* Personal reflection — full width, spans both columns */}
       {challengeReflection && (
         <motion.div
           {...fadeUp(0.3)}
           style={{
-            paddingTop: 'var(--space-8)',
+            paddingTop: '3rem',
             borderTop: '1px solid rgba(245,245,245,0.1)',
           }}
         >
           <p style={{
-            fontFamily: MONO,
-            fontSize: '0.62rem',
+            fontFamily: CRIMSON,
+            fontSize: LABEL,
+            fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
             color: 'rgba(245,245,245,0.35)',
-            margin: '0 0 var(--space-4) 0',
+            margin: '0 0 20px 0',
           }}>
             Personal reflection
           </p>
           <p style={{
-            fontFamily: SERIF,
+            fontFamily: CRIMSON,
             fontStyle: 'italic',
-            fontSize: '1.15rem',
-            lineHeight: 'var(--leading-relaxed)',
+            fontSize: '1.2rem',
+            fontWeight: 600,
+            letterSpacing: TRACK,
+            lineHeight: 1.7,
             color: 'rgba(245,245,245,0.8)',
             margin: 0,
-            maxWidth: '720px',
+            maxWidth: '640px',
           }}>
             {challengeReflection}
           </p>
@@ -247,9 +370,8 @@ function ProcessTab({ process, accent, isMobile }) {
         display: 'grid',
         gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
         marginBottom: '2.5rem',
-        rowGap: isMobile ? 'var(--space-8)' : 0,
+        rowGap: isMobile ? '3rem' : 0,
       }}>
-        {/* Connecting line behind dots (desktop only) */}
         {!isMobile && (
           <div style={{
             position: 'absolute',
@@ -270,12 +392,11 @@ function ProcessTab({ process, accent, isMobile }) {
               flexDirection: 'column',
               alignItems: 'center',
               textAlign: 'center',
-              paddingInline: 'var(--space-2)',
+              paddingInline: '12px',
               position: 'relative',
               zIndex: 1,
             }}
           >
-            {/* Bordered circle dot */}
             <div style={{
               width: '3rem',
               height: '3rem',
@@ -285,31 +406,35 @@ function ProcessTab({ process, accent, isMobile }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 'var(--space-3)',
+              marginBottom: '16px',
               flexShrink: 0,
             }}>
               <span style={{
-                fontFamily: MONO,
-                fontSize: '0.62rem',
+                fontFamily: CRIMSON,
+                fontSize: LABEL,
+                fontWeight: 600,
                 textTransform: 'uppercase',
-                color: 'var(--color-muted)',
+                color: FG_MUTED,
               }}>
                 {p.number}
               </span>
             </div>
             <p style={{
-              fontFamily: ARIAL,
-              fontSize: 'clamp(14px, 1.6vw, 18px)',
+              fontFamily: CRIMSON,
+              fontSize: '0.85rem',
               fontWeight: 700,
-              color: 'var(--color-fg)',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              color: FG_PRIMARY,
               margin: '0 0 4px 0',
             }}>
               {p.stage}
             </p>
             <p style={{
               fontFamily: ITIM,
-              fontSize: '0.88rem',
-              color: 'var(--color-muted)',
+              fontSize: BODY,
+              letterSpacing: TRACK,
+              color: FG_MUTED,
               margin: 0,
               lineHeight: 1.5,
             }}>
@@ -319,7 +444,7 @@ function ProcessTab({ process, accent, isMobile }) {
         ))}
       </div>
 
-      {/* Detail grid — 1px gap separator technique */}
+      {/* Detail grid — 1px gap separator */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
@@ -330,27 +455,27 @@ function ProcessTab({ process, accent, isMobile }) {
           <motion.div
             key={i}
             {...fadeUp(i * 0.08)}
-            style={{
-              background: 'var(--color-bg)',
-              padding: '1.5rem',
-            }}
+            style={{ background: 'var(--color-bg)', padding: '1.5rem' }}
           >
             <p style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
               color: accent,
-              margin: '0 0 var(--space-3) 0',
+              margin: '0 0 12px 0',
             }}>
               {p.stage}
             </p>
             <p style={{
               fontFamily: ITIM,
-              fontSize: '0.88rem',
-              lineHeight: 'var(--leading-relaxed)',
-              color: 'var(--color-fg)',
+              fontSize: BODY,
+              letterSpacing: TRACK,
+              lineHeight: 1.7,
+              color: FG_PRIMARY,
               margin: 0,
+              opacity: 0.8,
             }}>
               {p.detail}
             </p>
@@ -371,30 +496,74 @@ export default function CaseStudy() {
 
   const [thinkingOpen, setThinkingOpen] = useState(false)
   const [activeTab, setActiveTab] = useState(0)
+  const [activeSection, setActiveSection] = useState('cs-intro')
+  const [tocVisible, setTocVisible] = useState(true)
   const thinkingRef = useRef(null)
+  const footerRef = useRef(null)
+
+  // Track active section for TOC highlight
+  useEffect(() => {
+    const observers = []
+    TOC_ITEMS.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id) },
+        { rootMargin: '-20% 0px -70% 0px' }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [cs])
+
+  // Hide TOC when footer enters viewport
+  useEffect(() => {
+    const el = footerRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => setTocVisible(!entry.isIntersecting),
+      { rootMargin: '0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
 
   if (!cs) return (
-    <main style={{ padding: 'var(--section-padding-top) var(--page-padding-x)', paddingTop: 'var(--nav-height)' }}>
+    <main style={{ padding: '80px 24px' }}>
       <p>Case study not found.</p>
       <button onClick={() => navigate('/work')}>← Back to work</button>
     </main>
   )
 
-  const handleReadMore = () => {
+  const handleReadMore = (tabIndex = 0) => {
     setThinkingOpen(true)
+    setActiveTab(tabIndex)
     setTimeout(() => {
       thinkingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 120)
   }
 
-  const PX = isMobile ? '1.5rem' : '3rem'
-  const innerStyle = {
+  const PX = isMobile ? '24px' : '3rem'
+
+  const proseStyle = {
+    maxWidth: '700px',
+    marginInline: 'auto',
+    paddingInline: PX,
+  }
+
+  const mediaStyle = {
+    maxWidth: '900px',
+    marginInline: 'auto',
+    paddingInline: PX,
+  }
+
+  const wideStyle = {
     maxWidth: '1100px',
     marginInline: 'auto',
     paddingInline: PX,
   }
 
-  // ~5% opacity accent tint for quote background
   const accentTint = `${cs.accent}0d`
 
   return (
@@ -402,67 +571,76 @@ export default function CaseStudy() {
       data-case-study={cs.slug}
       style={{
         background: 'var(--color-bg)',
-        backgroundImage: `
-          linear-gradient(var(--grid-line) 1px, transparent 1px),
-          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)
-        `,
-        backgroundSize: '80px 80px',
         paddingTop: 'var(--nav-height)',
       }}
     >
 
+      {/* TOC — fixed left, desktop only */}
+      {!isMobile && (
+        <TableOfContents
+          activeId={activeSection}
+          accent={cs.accent}
+          visible={tocVisible}
+          thinkingOpen={thinkingOpen}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onOpenThinking={() => handleReadMore(activeTab)}
+        />
+      )}
+
       {/* ══════════════════════════════════════
           LAYER 1 — PAGE HEADER
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingTop: 'var(--space-6)',
-        paddingBottom: 'var(--space-8)',
+      <section id="cs-intro" style={{
+        ...proseStyle,
+        paddingTop: isMobile ? '3rem' : '5rem',
+        paddingBottom: '3rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
 
-        {/* Back nav */}
         <motion.button
           {...fadeUp(0)}
           onClick={() => navigate('/work')}
           whileHover={{ x: -3 }}
           transition={{ duration: 0.2 }}
           style={{
-            fontFamily: MONO,
-            fontSize: '0.62rem',
+            fontFamily: CRIMSON,
+            fontSize: LABEL,
+            fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            color: 'var(--color-muted)',
+            color: FG_MUTED,
             background: 'none',
             border: 'none',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
             padding: 0,
-            marginBottom: 'var(--space-5)',
+            marginBottom: '2rem',
           }}
         >
           ← Work
         </motion.button>
 
-        {/* Category tags */}
+        {/* Tags */}
         <motion.div
           {...fadeUp(0.04)}
-          style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: 'var(--space-5)' }}
+          style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '1.5rem' }}
         >
           {cs.tags.map((tag) => (
             <span
               key={tag}
               style={{
-                fontFamily: MONO,
-                fontSize: '0.62rem',
+                fontFamily: CRIMSON,
+                fontSize: LABEL,
+                fontWeight: 600,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
                 color: cs.accent,
                 padding: '3px 10px',
                 border: `1px solid ${cs.accent}`,
-                borderRadius: 'var(--radius-pill)',
+                borderRadius: '100px',
               }}
             >
               {tag}
@@ -470,38 +648,54 @@ export default function CaseStudy() {
           ))}
         </motion.div>
 
-        {/* Large display title */}
+        {/* Display title */}
         <motion.h1
           {...fadeUp(0.06)}
           style={{
             fontFamily: ARIAL,
-            fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+            fontSize: isMobile ? 'clamp(2.5rem, 12vw, 4rem)' : 'clamp(3rem, 6vw, 5rem)',
             fontWeight: 900,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.03em',
             lineHeight: 0.92,
-            color: 'var(--color-fg)',
-            margin: '0 0 var(--space-8) 0',
+            color: FG_PRIMARY,
+            margin: '0 0 2rem 0',
           }}
         >
           {cs.title}
         </motion.h1>
 
-        {/* Meta row — top border separator */}
+        {/* Subtitle */}
+        <motion.p
+          {...fadeUp(0.08)}
+          style={{
+            fontFamily: ITIM,
+            fontSize: BODY_LG,
+            letterSpacing: TRACK,
+            lineHeight: 1.6,
+            color: FG_PRIMARY,
+            opacity: 0.6,
+            margin: '0 0 2.5rem 0',
+          }}
+        >
+          {cs.subtitle}
+        </motion.p>
+
+        {/* Meta row */}
         <motion.div
           {...fadeUp(0.1)}
           style={{
-            paddingTop: 'var(--space-5)',
+            paddingTop: '1.5rem',
             borderTop: '1px solid var(--color-subtle)',
             display: 'flex',
-            gap: '3rem',
+            gap: isMobile ? '1.5rem' : '2.5rem',
             flexWrap: 'wrap',
           }}
         >
-          <MetaCell label="Client" value={cs.meta.client} />
-          <MetaCell label="Year" value={cs.meta.year} />
-          <MetaCell label="Team size" value={cs.meta.teamSize} />
-          <MetaCell label="My role" value={cs.meta.role} />
-          <MetaCell label="Status" value={cs.meta.status} />
+          <MetaCell label="Client"  value={cs.meta.client} />
+          <MetaCell label="Year"    value={cs.meta.year} />
+          <MetaCell label="Team"    value={cs.meta.teamSize} />
+          <MetaCell label="Role"    value={cs.meta.role} />
+          <MetaCell label="Status"  value={cs.meta.status} />
         </motion.div>
       </section>
 
@@ -509,63 +703,48 @@ export default function CaseStudy() {
       {/* ══════════════════════════════════════
           LAYER 2 — CHALLENGE + OPPORTUNITY
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+      <section id="cs-challenge" style={{
+        ...proseStyle,
+        paddingBlock: '5rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          gap: isMobile ? 'var(--space-10)' : '4rem',
-          alignItems: 'start',
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
 
-          {/* Challenge */}
-          <div>
-            <motion.div {...fadeUp(0)} style={{ marginBottom: 'var(--space-4)' }}>
-              <SectionLabel>The Challenge</SectionLabel>
-            </motion.div>
+          <motion.div {...fadeUp(0)}>
+            <SectionLabel>The Challenge</SectionLabel>
             {cs.challenge.map((para, i) => (
-              <motion.p
-                key={i}
-                {...fadeUp(0.06 + i * 0.05)}
-                style={{
-                  fontFamily: ITIM,
-                  fontSize: '0.97rem',
-                  lineHeight: 'var(--leading-relaxed)',
-                  color: 'var(--color-fg)',
-                  maxWidth: '62ch',
-                  margin: i < cs.challenge.length - 1 ? '0 0 var(--space-4) 0' : 0,
-                }}
-              >
+              <p key={i} style={{
+                fontFamily: ITIM,
+                fontSize: BODY_LG,
+                letterSpacing: TRACK,
+                lineHeight: 1.75,
+                color: FG_PRIMARY,
+                opacity: i === 0 ? 1 : 0.75,
+                margin: i < cs.challenge.length - 1 ? '0 0 1rem 0' : 0,
+              }}>
                 {para}
-              </motion.p>
+              </p>
             ))}
-          </div>
+          </motion.div>
 
-          {/* Opportunity */}
-          <div>
-            <motion.div {...fadeUp(0.05)} style={{ marginBottom: 'var(--space-4)' }}>
-              <SectionLabel>The Opportunity</SectionLabel>
-            </motion.div>
+          <div style={{ borderTop: '1px solid var(--color-subtle)' }} />
+
+          <motion.div {...fadeUp(0.06)}>
+            <SectionLabel>The Opportunity</SectionLabel>
             {cs.opportunity.map((para, i) => (
-              <motion.p
-                key={i}
-                {...fadeUp(0.1 + i * 0.05)}
-                style={{
-                  fontFamily: ITIM,
-                  fontSize: '0.97rem',
-                  lineHeight: 'var(--leading-relaxed)',
-                  color: 'var(--color-fg)',
-                  maxWidth: '62ch',
-                  margin: i < cs.opportunity.length - 1 ? '0 0 var(--space-4) 0' : 0,
-                }}
-              >
+              <p key={i} style={{
+                fontFamily: ITIM,
+                fontSize: BODY_LG,
+                letterSpacing: TRACK,
+                lineHeight: 1.75,
+                color: FG_PRIMARY,
+                opacity: i === 0 ? 1 : 0.75,
+                margin: i < cs.opportunity.length - 1 ? '0 0 1rem 0' : 0,
+              }}>
                 {para}
-              </motion.p>
+              </p>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -574,8 +753,8 @@ export default function CaseStudy() {
           LAYER 3 — RESEARCH QUOTE
       ══════════════════════════════════════ */}
       <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+        ...proseStyle,
+        paddingBlock: '5rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
         <motion.blockquote
@@ -585,24 +764,28 @@ export default function CaseStudy() {
             borderLeft: `3px solid ${cs.accent}`,
             background: accentTint,
             padding: '1.5rem 2rem',
+            borderRadius: '0 8px 8px 0',
           }}
         >
           <p style={{
-            fontFamily: SERIF,
+            fontFamily: CRIMSON,
             fontStyle: 'italic',
-            fontSize: '1.15rem',
-            lineHeight: 1.6,
-            color: 'var(--color-fg)',
-            margin: '0 0 var(--space-3) 0',
+            fontSize: '1.2rem',
+            fontWeight: 600,
+            letterSpacing: TRACK,
+            lineHeight: 1.65,
+            color: FG_PRIMARY,
+            margin: '0 0 1rem 0',
           }}>
             {cs.pullQuote}
           </p>
           <p style={{
-            fontFamily: MONO,
-            fontSize: '0.62rem',
+            fontFamily: CRIMSON,
+            fontSize: LABEL,
+            fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            color: 'var(--color-muted)',
+            color: FG_MUTED,
             margin: 0,
           }}>
             — {cs.pullQuoteSource}
@@ -614,38 +797,38 @@ export default function CaseStudy() {
       {/* ══════════════════════════════════════
           LAYER 4 — PROBLEM / SOLUTION GRID
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+      <section id="cs-diagnosis" style={{
+        ...wideStyle,
+        paddingBlock: '5rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
         <SectionLabel>Diagnosis</SectionLabel>
 
         {isMobile ? (
-          /* Mobile: stacked columns */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-10)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
             {['problems', 'solutions'].map((type) => (
               <div key={type}>
                 <h3 style={{
-                  fontFamily: SERIF,
-                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+                  fontFamily: CRIMSON,
+                  fontSize: '1.5rem',
                   fontWeight: 700,
-                  color: 'var(--color-fg)',
-                  margin: '0 0 var(--space-4) 0',
+                  letterSpacing: TRACK,
+                  color: FG_PRIMARY,
+                  margin: '0 0 1rem 0',
                 }}>
                   {type === 'problems' ? 'Problem' : 'Solution'}
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {cs.diagnosis[type].map((item, i) => (
                     <div key={i} style={{
                       background: type === 'problems' ? '#FADDD8' : '#BEE4E8',
-                      borderRadius: 'var(--radius-md)',
+                      borderRadius: '8px',
                       padding: '1rem 1.25rem',
                     }}>
-                      <p style={{ fontFamily: ARIAL, fontSize: '0.82rem', fontWeight: 700, color: '#1a1a1a', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                      <p style={{ fontFamily: CRIMSON, fontSize: '0.9rem', fontWeight: 700, letterSpacing: TRACK, color: '#1a1a1a', margin: '0 0 4px 0', lineHeight: 1.3 }}>
                         {item.title}
                       </p>
-                      <p style={{ fontFamily: ITIM, fontSize: '0.82rem', lineHeight: 1.55, color: '#333', margin: 0 }}>
+                      <p style={{ fontFamily: ITIM, fontSize: BODY, letterSpacing: TRACK, lineHeight: 1.55, color: '#333', margin: 0 }}>
                         {item.body}
                       </p>
                     </div>
@@ -655,38 +838,27 @@ export default function CaseStudy() {
             ))}
           </div>
         ) : (
-          /* Desktop: three-column (problems | divider | solutions) */
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 80px 1fr',
-            alignItems: 'start',
-          }}>
-            {/* Problems column */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px 1fr', alignItems: 'start' }}>
+
+            {/* Problems */}
             <div>
               <h3 style={{
-                fontFamily: SERIF,
-                fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+                fontFamily: CRIMSON,
+                fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
                 fontWeight: 700,
-                color: 'var(--color-fg)',
-                margin: '0 0 var(--space-4) 0',
+                letterSpacing: TRACK,
+                color: FG_PRIMARY,
+                margin: '0 0 1rem 0',
               }}>
                 Problem
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {cs.diagnosis.problems.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    {...fadeUp(i * 0.07)}
-                    style={{
-                      background: '#FADDD8',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '1rem 1.25rem',
-                    }}
-                  >
-                    <p style={{ fontFamily: ARIAL, fontSize: '0.82rem', fontWeight: 700, color: '#1a1a1a', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                  <motion.div key={i} {...fadeUp(i * 0.06)} style={{ background: '#FADDD8', borderRadius: '8px', padding: '1rem 1.25rem' }}>
+                    <p style={{ fontFamily: CRIMSON, fontSize: '0.9rem', fontWeight: 700, letterSpacing: TRACK, color: '#1a1a1a', margin: '0 0 4px 0', lineHeight: 1.3 }}>
                       {item.title}
                     </p>
-                    <p style={{ fontFamily: ITIM, fontSize: '0.82rem', lineHeight: 1.55, color: '#333', margin: 0 }}>
+                    <p style={{ fontFamily: ITIM, fontSize: BODY, letterSpacing: TRACK, lineHeight: 1.6, color: '#333', margin: 0 }}>
                       {item.body}
                     </p>
                   </motion.div>
@@ -694,28 +866,21 @@ export default function CaseStudy() {
               </div>
             </div>
 
-            {/* Centre divider — vertical line with arrow */}
+            {/* Centre divider */}
             <div style={{
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               alignSelf: 'stretch',
               position: 'relative',
             }}>
-              <div style={{
-                width: '1px',
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                background: 'var(--color-subtle)',
-              }} />
+              <div style={{ width: '1px', position: 'absolute', top: 0, bottom: 0, background: 'var(--color-subtle)' }} />
               <span style={{
                 position: 'relative',
                 zIndex: 1,
                 fontFamily: ARIAL,
-                fontSize: '1.1rem',
-                color: 'var(--color-muted)',
+                fontSize: '1rem',
+                color: FG_MUTED,
                 background: 'var(--color-bg)',
                 padding: '6px 0',
                 userSelect: 'none',
@@ -724,32 +889,25 @@ export default function CaseStudy() {
               </span>
             </div>
 
-            {/* Solutions column */}
+            {/* Solutions */}
             <div>
               <h3 style={{
-                fontFamily: SERIF,
-                fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+                fontFamily: CRIMSON,
+                fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
                 fontWeight: 700,
-                color: 'var(--color-fg)',
-                margin: '0 0 var(--space-4) 0',
+                letterSpacing: TRACK,
+                color: FG_PRIMARY,
+                margin: '0 0 1rem 0',
               }}>
                 Solution
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {cs.diagnosis.solutions.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    {...fadeUp(i * 0.07)}
-                    style={{
-                      background: '#BEE4E8',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '1rem 1.25rem',
-                    }}
-                  >
-                    <p style={{ fontFamily: ARIAL, fontSize: '0.82rem', fontWeight: 700, color: '#1a1a1a', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                  <motion.div key={i} {...fadeUp(i * 0.06)} style={{ background: '#BEE4E8', borderRadius: '8px', padding: '1rem 1.25rem' }}>
+                    <p style={{ fontFamily: CRIMSON, fontSize: '0.9rem', fontWeight: 700, letterSpacing: TRACK, color: '#1a1a1a', margin: '0 0 4px 0', lineHeight: 1.3 }}>
                       {item.title}
                     </p>
-                    <p style={{ fontFamily: ITIM, fontSize: '0.82rem', lineHeight: 1.55, color: '#333', margin: 0 }}>
+                    <p style={{ fontFamily: ITIM, fontSize: BODY, letterSpacing: TRACK, lineHeight: 1.6, color: '#333', margin: 0 }}>
                       {item.body}
                     </p>
                   </motion.div>
@@ -759,22 +917,22 @@ export default function CaseStudy() {
           </div>
         )}
 
-        {/* Collaborative credit */}
+        {/* Credit line */}
         <motion.div
           {...fadeUp(0.3)}
           style={{
-            marginTop: 'var(--space-8)',
-            paddingTop: 'var(--space-4)',
+            marginTop: '3rem',
+            paddingTop: '1.5rem',
             borderTop: '1px solid var(--color-subtle)',
             display: 'flex',
             flexDirection: 'column',
-            gap: 'var(--space-1)',
+            gap: '6px',
           }}
         >
-          <p style={{ fontFamily: MONO, fontSize: '0.62rem', letterSpacing: '0.08em', color: 'var(--color-muted)', margin: 0 }}>
+          <p style={{ fontFamily: CRIMSON, fontSize: LABEL, fontWeight: 400, letterSpacing: '0.06em', color: FG_MUTED, margin: 0 }}>
             {cs.diagnosis.collaborativeCredit}
           </p>
-          <p style={{ fontFamily: MONO, fontSize: '0.62rem', letterSpacing: '0.08em', color: 'var(--color-muted)', margin: 0 }}>
+          <p style={{ fontFamily: CRIMSON, fontSize: LABEL, fontWeight: 400, letterSpacing: '0.06em', color: FG_MUTED, margin: 0, opacity: 0.7 }}>
             {cs.diagnosis.contribution}
           </p>
         </motion.div>
@@ -784,14 +942,13 @@ export default function CaseStudy() {
       {/* ══════════════════════════════════════
           LAYER 5 — RESEARCH STATISTICS
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+      <section id="cs-research" style={{
+        ...wideStyle,
+        paddingBlock: '5rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
         <SectionLabel>Research findings</SectionLabel>
 
-        {/* 1px gap separator technique */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
@@ -801,27 +958,26 @@ export default function CaseStudy() {
           {cs.stats.map((stat, i) => (
             <motion.div
               key={i}
-              {...fadeUp(i * 0.1)}
-              style={{
-                background: 'var(--color-bg)',
-                padding: '1.75rem 1.5rem',
-              }}
+              {...fadeUp(i * 0.08)}
+              style={{ background: 'var(--color-bg)', padding: '1.75rem 1.5rem' }}
             >
               <p style={{
-                fontFamily: SERIF,
+                fontFamily: CRIMSON,
                 fontSize: '2.5rem',
-                fontWeight: 900,
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
                 color: cs.accent,
-                margin: '0 0 var(--space-2) 0',
+                margin: '0 0 10px 0',
                 lineHeight: 1,
               }}>
                 {stat.value}
               </p>
               <p style={{
                 fontFamily: ARIAL,
-                fontSize: '0.88rem',
+                fontSize: BODY,
+                letterSpacing: TRACK,
                 lineHeight: 1.5,
-                color: 'var(--color-muted)',
+                color: FG_MUTED,
                 margin: 0,
               }}>
                 {stat.label}
@@ -835,50 +991,48 @@ export default function CaseStudy() {
       {/* ══════════════════════════════════════
           LAYER 6 — KEY OUTCOMES
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+      <section id="cs-outcomes" style={{
+        ...wideStyle,
+        paddingBlock: '5rem',
         borderBottom: '1px solid var(--color-subtle)',
       }}>
         <SectionLabel>Key outcomes</SectionLabel>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          alignItems: 'start',
-        }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', alignItems: 'start' }}>
 
-          {/* Left — outcome stat rows */}
+          {/* Stat rows */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {cs.outcomes.stats.map((stat, i) => (
               <motion.div
                 key={i}
-                {...fadeUp(i * 0.1)}
+                {...fadeUp(i * 0.08)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 'var(--space-5)',
-                  paddingBlock: 'var(--space-7)',
+                  gap: '1.5rem',
+                  paddingBlock: '1.75rem',
                   borderBottom: '1px solid var(--color-subtle)',
                 }}
               >
                 <p style={{
-                  fontFamily: SERIF,
+                  fontFamily: CRIMSON,
                   fontSize: '2.5rem',
-                  fontWeight: 900,
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
                   lineHeight: 1,
-                  color: 'var(--color-fg)',
+                  color: FG_PRIMARY,
                   margin: 0,
-                  minWidth: '80px',
+                  minWidth: '72px',
                   flexShrink: 0,
                 }}>
                   {stat.value}
                 </p>
                 <p style={{
                   fontFamily: ARIAL,
-                  fontSize: '0.88rem',
+                  fontSize: BODY,
+                  letterSpacing: TRACK,
                   lineHeight: 1.55,
-                  color: 'var(--color-muted)',
+                  color: FG_MUTED,
                   margin: 0,
                 }}>
                   {stat.label}
@@ -887,15 +1041,15 @@ export default function CaseStudy() {
             ))}
           </div>
 
-          {/* Right — narrative, separated by left border */}
+          {/* Narrative */}
           <motion.div
-            {...fadeUp(0.15)}
+            {...fadeUp(0.12)}
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--space-5)',
+              gap: '1.25rem',
               paddingLeft: isMobile ? 0 : '3rem',
-              paddingTop: isMobile ? 'var(--space-8)' : 0,
+              paddingTop: isMobile ? '2.5rem' : 0,
               borderLeft: isMobile ? 'none' : '1px solid var(--color-subtle)',
               borderTop: isMobile ? '1px solid var(--color-subtle)' : 'none',
             }}
@@ -903,9 +1057,11 @@ export default function CaseStudy() {
             {cs.outcomes.narrative.map((para, i) => (
               <p key={i} style={{
                 fontFamily: ITIM,
-                fontSize: '0.97rem',
-                lineHeight: 'var(--leading-relaxed)',
-                color: 'var(--color-fg)',
+                fontSize: BODY_LG,
+                letterSpacing: TRACK,
+                lineHeight: 1.75,
+                color: FG_PRIMARY,
+                opacity: i === 0 ? 0.9 : 0.7,
                 margin: 0,
               }}>
                 {para}
@@ -921,21 +1077,22 @@ export default function CaseStudy() {
       ══════════════════════════════════════ */}
       {!thinkingOpen && (
         <section style={{
-          ...innerStyle,
-          paddingBlock: '4rem',
+          ...proseStyle,
+          paddingBlock: '5rem',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 'var(--space-4)',
+          gap: '1.25rem',
         }}>
           <motion.p
             {...fadeUp(0)}
             style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 600,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: 'var(--color-muted)',
+              color: FG_MUTED,
               margin: 0,
             }}
           >
@@ -944,18 +1101,19 @@ export default function CaseStudy() {
           <motion.button
             {...fadeUp(0.06)}
             onClick={handleReadMore}
-            whileHover={{ opacity: 0.8 }}
-            transition={{ duration: 0.25 }}
+            whileHover={{ opacity: 0.75 }}
+            transition={{ duration: 0.2 }}
             style={{
-              fontFamily: MONO,
-              fontSize: '0.75rem',
+              fontFamily: CRIMSON,
+              fontSize: '0.78rem',
+              fontWeight: 700,
               textTransform: 'uppercase',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.1em',
               color: 'var(--color-bg)',
-              background: 'var(--color-fg)',
+              background: FG_PRIMARY,
               border: 'none',
-              borderRadius: 'var(--radius-pill)',
-              padding: '14px 40px',
+              borderRadius: '100px',
+              padding: '13px 36px',
               cursor: 'pointer',
             }}
           >
@@ -971,10 +1129,11 @@ export default function CaseStudy() {
       <AnimatePresence>
         {thinkingOpen && (
           <motion.section
+            id="cs-thinking"
             ref={thinkingRef}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             style={{ borderTop: '1px solid var(--color-subtle)' }}
           >
             {/* Sticky tab bar */}
@@ -985,18 +1144,19 @@ export default function CaseStudy() {
               background: 'var(--color-bg)',
               borderBottom: '1px solid var(--color-subtle)',
             }}>
-              <div style={{ ...innerStyle, paddingBlock: 0 }}>
-                <div style={{ display: 'flex', gap: 0 }}>
+              <div style={{ ...wideStyle, paddingBlock: 0 }}>
+                <div style={{ display: 'flex' }}>
                   {TABS.map((tab, i) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(i)}
                       style={{
-                        fontFamily: MONO,
-                        fontSize: '0.62rem',
-                        letterSpacing: '0.1em',
+                        fontFamily: CRIMSON,
+                        fontSize: LABEL,
+                        fontWeight: activeTab === i ? 700 : 400,
+                        letterSpacing: '0.08em',
                         textTransform: 'uppercase',
-                        color: activeTab === i ? 'var(--color-fg)' : 'var(--color-muted)',
+                        color: activeTab === i ? FG_PRIMARY : FG_MUTED,
                         background: 'none',
                         border: 'none',
                         borderBottom: activeTab === i
@@ -1018,40 +1178,28 @@ export default function CaseStudy() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+                transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
               >
                 {activeTab === 0 && (
-                  <div style={{ ...innerStyle, paddingBlock: 'var(--space-10)' }}>
-                    <DecisionsTab
-                      decisions={cs.decisions}
-                      accent={cs.accent}
-                      isMobile={isMobile}
-                    />
+                  <div style={{ ...mediaStyle, paddingBlock: '5rem' }}>
+                    <DecisionsTab decisions={cs.decisions} accent={cs.accent} isMobile={isMobile} />
                   </div>
                 )}
 
                 {activeTab === 1 && (
-                  /* Full viewport-width dark background */
                   <div style={{ background: '#111111', width: '100%' }}>
-                    <div style={{ ...innerStyle, paddingBlock: 'var(--space-10)' }}>
-                      <ChallengesTab
-                        challenges={cs.challenges}
-                        challengeReflection={cs.challengeReflection}
-                      />
+                    <div style={{ ...wideStyle, paddingBlock: '5rem' }}>
+                      <ChallengesTab challenges={cs.challenges} challengeReflection={cs.challengeReflection} />
                     </div>
                   </div>
                 )}
 
                 {activeTab === 2 && (
-                  <div style={{ ...innerStyle, paddingBlock: 'var(--space-10)' }}>
-                    <ProcessTab
-                      process={cs.process}
-                      accent={cs.accent}
-                      isMobile={isMobile}
-                    />
+                  <div style={{ ...wideStyle, paddingBlock: '5rem' }}>
+                    <ProcessTab process={cs.process} accent={cs.accent} isMobile={isMobile} />
                   </div>
                 )}
               </motion.div>
@@ -1064,38 +1212,39 @@ export default function CaseStudy() {
       {/* ══════════════════════════════════════
           LAYER 9 — CLOSING FOOTER
       ══════════════════════════════════════ */}
-      <section style={{
-        ...innerStyle,
-        paddingBlock: 'var(--space-10)',
+      <section ref={footerRef} style={{
+        ...proseStyle,
+        paddingBlock: '4rem',
         borderTop: '1px solid var(--color-subtle)',
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--space-6)',
+        gap: '1.5rem',
       }}>
         <p style={{
           fontFamily: ARIAL,
-          fontSize: 'clamp(16px, 2vw, 22px)',
+          fontSize: BODY,
           fontWeight: 700,
-          color: 'var(--color-fg)',
+          letterSpacing: TRACK,
+          color: FG_PRIMARY,
           margin: 0,
-          letterSpacing: '-0.01em',
         }}>
           Vishvak Rajendran
         </p>
 
-        <div style={{ display: 'flex', gap: 'var(--space-6)', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
           <motion.button
             onClick={() => navigate('/work')}
             whileHover={{ x: -3 }}
             transition={{ duration: 0.2 }}
             style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: 'var(--color-muted)',
+              color: FG_MUTED,
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -1107,8 +1256,9 @@ export default function CaseStudy() {
           <a
             href="mailto:hello@vishvak.com"
             style={{
-              fontFamily: MONO,
-              fontSize: '0.62rem',
+              fontFamily: CRIMSON,
+              fontSize: LABEL,
+              fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               color: cs.accent,
