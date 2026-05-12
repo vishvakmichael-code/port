@@ -27,6 +27,13 @@ export const caseStudies = {
       `The goal was to make repair and exchange feel as accessible as buying something new — and more meaningful.`,
     ],
 
+    siteVisitImages: [
+      '/images/projects/getlini/sitevisit1.jpg',
+      '/images/projects/getlini/sitevisit2.png',
+      '/images/projects/getlini/sitevisit3.png',
+      '/images/projects/getlini/sitevisit4.png',
+    ],
+
     pullQuote: `"Going to a shop that is 5 minutes from your home to fix a broken blender is more convenient than driving 40 minutes across the whole city to maybe fix it."`,
     pullQuoteSource: 'Research participant · Riga',
 
@@ -112,18 +119,21 @@ export const caseStudies = {
         title: 'The Mobile Collection Van',
         body: `Our research kept showing the same thing — 86% of people would skip an event if travel was inconvenient. So we proposed attaching a small Reboot van to Getliņi's existing garbage collection trucks, running on their Tuesday programme so objects are assessed and collected at home. The van uses infrastructure that already exists. It doesn't ask people to change their behaviour before they've experienced anything worth changing for.`,
         artifact: 'Service blueprint — mobile touchpoint',
+        image: '/images/projects/getlini/about-workshop.jpg',
       },
       {
         number: '02',
         title: 'The Storytelling Framework',
         body: `I tested this in the workshop and 41% kept objects past their usefulness because of emotional attachment. Not because they wanted to. The Reboot app lets people add a short story or care tip before donating an object, turning an obligation into something that felt worth doing. This was the most contested decision in the team — and the one Getliņi responded to most strongly.`,
         artifact: 'App prototype — story submission flow',
+        image: '/images/projects/getlini/story-sharing.png',
       },
       {
         number: '03',
         title: 'The Digital Pre-check',
         body: `44% of people didn't know which items would be accepted at repair or exchange initiatives. That's a motivation problem disguised as a logistics problem. The app lets someone submit a photo and get an eligibility response before they've made any effort to travel. Remove the uncertainty at the entry point and more people begin the journey.`,
         artifact: 'App prototype — pre-check screen',
+        image: '/images/projects/getlini/app-mocks.png',
       },
     ],
 
@@ -158,24 +168,28 @@ export const caseStudies = {
         stage: 'Research',
         oneLiner: 'Understanding people, not assumptions',
         detail: 'Twelve qualitative interviews, a behavioural survey with 36 participants, and in-person ethnography in Riga and Ķekava. Every major design decision in the service traces back to something a real person told us.',
+        image: '/images/projects/getlini/workshopfindings.jpg',
       },
       {
         number: '02',
         stage: 'Workshop',
         oneLiner: 'Co-creation with staff and community',
         detail: 'I facilitated a session with Getliņi staff and community members. Halfway through we introduced an unplanned emotional mapping exercise — asking people how they feel at each stage of deciding what to do with a broken object. That surfaced the barrier that became the storytelling framework.',
+        image: '/images/projects/getlini/workshop-6spresso-01.JPEG',
       },
       {
         number: '03',
         stage: 'Blueprint',
         oneLiner: 'Making the service operational on paper',
         detail: 'The service blueprint mapped every touchpoint across the Reboot ecosystem — mobile van, exchange station, digital pre-check, storytelling flow, and community membership. Built to be used in a Getliņi stakeholder meeting, not just reviewed as a deliverable.',
+        image: '/images/projects/getlini/service-blueprint.jpg',
       },
       {
         number: '04',
         stage: 'Testing',
         oneLiner: 'Prototype validation with real residents',
         detail: 'Nine participants, local. We tested the app, the exchange station experience and the storytelling feature. 80% said storytelling would bring them back. That told us we had designed for the right thing.',
+        image: '/images/projects/getlini/testing with people.JPG',
       },
     ],
   },

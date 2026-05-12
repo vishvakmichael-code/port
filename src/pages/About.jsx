@@ -17,6 +17,8 @@ const fadeUp = {
 
 /* ── Trajectory image / placeholder ── */
 function TrajectoryImage({ src, year }) {
+  if (!src) return null
+
   return (
     <div style={{
       width: '100%',
@@ -24,7 +26,7 @@ function TrajectoryImage({ src, year }) {
       aspectRatio: '4/3',
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden',
-      background: '#F0F0F0',
+      background: 'var(--color-bg-3)',
       position: 'relative',
       flexShrink: 0,
     }}>
@@ -34,23 +36,6 @@ function TrajectoryImage({ src, year }) {
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         onError={(e) => { e.target.style.display = 'none' }}
       />
-      <p style={{
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: 'var(--font-mono)',
-        fontSize: '9px',
-        color: '#999999',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-        padding: '8px',
-        margin: 0,
-        pointerEvents: 'none',
-      }}>
-        {src.split('/').pop()}
-      </p>
     </div>
   )
 }

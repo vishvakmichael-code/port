@@ -6,8 +6,6 @@ import { useCursorState } from '../../hooks/useCursorState'
 const NAV_LINKS = [
   { label: 'work',  href: '/work'    },
   { label: 'about', href: '/about'   },
-  { label: 'play',  href: '/play'    },
-  { label: 'talk',  href: '/contact' },
 ]
 
 /* ── Split-text flip link ──────────────────────────────────── */
@@ -198,7 +196,7 @@ export default function Navigation() {
           }}
         >
           <img
-            src="/images/logo.svg"
+            src="/logo.svg"
             alt="Vishvak Rajendran"
             style={{
               width: '28px',
