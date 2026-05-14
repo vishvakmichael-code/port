@@ -2,15 +2,17 @@ import { useState } from 'react'
 
 const DM_SANS = "'DM Sans', sans-serif"
 
-const ACTIVE_COLOR = '#1a1aee'
-const ACTIVE_TINT  = '#eef2fb'
+const ACTIVE_COLOR = '#1a1a6e'
+const ACTIVE_TINT  = '#f5f7ff'
 const LINE_COLOR   = '#e0e0e0'
 const DOT_INACTIVE = '#cccccc'
 const TEXT_BODY    = '#333333'
 const TEXT_MUTED   = '#888888'
 const SEPARATOR    = '#eeeeee'
 
-const LABEL = {
+const PLUS_CURSOR = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cline x1='10' y1='4' x2='10' y2='16' stroke='%231a1a6e' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='4' y1='10' x2='16' y2='10' stroke='%231a1a6e' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 10 10, auto`
+
+const LABEL_STYLE = {
   fontFamily: DM_SANS,
   fontSize: '11px',
   fontWeight: 700,
@@ -20,29 +22,14 @@ const LABEL = {
   margin: 0,
 }
 
-function Cell({ icon, title, body, isActive, onClick, side }) {
+function Cell({ icon, title, body, isActive, side }) {
   const color = isActive ? ACTIVE_COLOR : TEXT_BODY
   const pad = side === 'left'
     ? '18px 28px 18px 0'
     : '18px 0 18px 28px'
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={e => e.key === 'Enter' && onClick()}
-      style={{
-        background: isActive ? ACTIVE_TINT : 'transparent',
-        cursor: 'pointer',
-        padding: pad,
-        transition: 'background 0.25s ease',
-        border: 'none',
-        textAlign: 'left',
-        outline: 'none',
-      }}
-    >
-      {/* Title row — icon + label */}
+    <div style={{ padding: pad }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <i
           className={`ti ${icon}`}
@@ -67,7 +54,6 @@ function Cell({ icon, title, body, isActive, onClick, side }) {
         </span>
       </div>
 
-      {/* Description — max-height reveal */}
       <div style={{
         maxHeight: isActive ? '200px' : '0',
         overflow: 'hidden',
@@ -91,6 +77,7 @@ function Cell({ icon, title, body, isActive, onClick, side }) {
 
 export default function ProblemSolutionMap({ pairs }) {
   const [active, setActive] = useState(null)
+  const [hovered, setHovered] = useState(null)
   const toggle = i => setActive(prev => (prev === i ? null : i))
 
   return (
@@ -98,26 +85,38 @@ export default function ProblemSolutionMap({ pairs }) {
       {/* Column headers */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 48px 1fr',
+        gridTemplateColumns: '1fr 48px 1fr 32px',
         borderBottom: `1px solid ${SEPARATOR}`,
         paddingBottom: '12px',
         marginBottom: 0,
       }}>
-        <span style={LABEL}>Problem</span>
+        <span style={LABEL_STYLE}>Problem</span>
         <span />
-        <span style={LABEL}>Solution</span>
+        <span style={LABEL_STYLE}>Solution</span>
+        <span />
       </div>
 
       {/* Rows */}
       {pairs.map((pair, i) => {
         const isActive = active === i
+        const isHovered = hovered === i
         return (
           <div
             key={i}
+            role="button"
+            tabIndex={0}
+            onClick={() => toggle(i)}
+            onKeyDown={e => e.key === 'Enter' && toggle(i)}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 48px 1fr',
+              gridTemplateColumns: '1fr 48px 1fr 32px',
               borderBottom: `1px solid ${SEPARATOR}`,
+              background: isActive ? ACTIVE_TINT : 'transparent',
+              transition: 'background 0.25s ease',
+              cursor: PLUS_CURSOR,
+              outline: 'none',
             }}
           >
             <Cell
@@ -125,7 +124,6 @@ export default function ProblemSolutionMap({ pairs }) {
               title={pair.problem.title}
               body={pair.problem.body}
               isActive={isActive}
-              onClick={() => toggle(i)}
               side="left"
             />
 
@@ -153,9 +151,30 @@ export default function ProblemSolutionMap({ pairs }) {
               title={pair.solution.title}
               body={pair.solution.body}
               isActive={isActive}
-              onClick={() => toggle(i)}
               side="right"
             />
+
+            {/* Toggle icon */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              paddingRight: '4px',
+            }}>
+              <span style={{
+                display: 'inline-block',
+                fontSize: '16px',
+                lineHeight: 1,
+                color: isActive || isHovered ? ACTIVE_COLOR : TEXT_MUTED,
+                transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease, color 0.2s ease',
+                userSelect: 'none',
+                fontWeight: 400,
+              }}>
+                +
+              </span>
+            </div>
           </div>
         )
       })}

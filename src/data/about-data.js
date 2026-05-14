@@ -13,6 +13,7 @@ Service design gave a name to something I'd already been doing. That's the short
 export const trajectory = [
   {
     year: 'Current, 2026',
+    title: 'MA Service Design, Art Academy of Latvia',
     location: 'Riga, Latvia',
     image: '/images/about/Riga current.jpg',
     side: 'left',
@@ -20,6 +21,7 @@ export const trajectory = [
   },
   {
     year: '2024–2025',
+    title: 'Technical Writer & Developer Relations, Surfboard Payments',
     location: 'Chennai, India',
     image: '/images/about/surfboardpayments.png',
     side: 'right',
@@ -27,6 +29,7 @@ export const trajectory = [
   },
   {
     year: '2023',
+    title: 'Freelancing, Training & Teaching',
     location: 'Chennai, India',
     image: '/images/about/freelancing training.JPG',
     side: 'left',
@@ -34,6 +37,7 @@ export const trajectory = [
   },
   {
     year: '2022',
+    title: 'MA English Literature, University of Madras',
     location: 'Chennai, India',
     image: '/images/about/English literature.jpg',
     side: 'right',
@@ -41,6 +45,7 @@ export const trajectory = [
   },
   {
     year: '2019',
+    title: 'BSc Physics, Gurunanak College',
     location: 'Chennai, India',
     image: '/images/about/physics.jpg',
     side: 'left',
