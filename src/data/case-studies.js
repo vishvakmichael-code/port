@@ -1,8 +1,8 @@
 export const caseStudies = {
   'getlini-eco': {
     slug: 'getlini-eco',
-    title: 'Getliņi Eco',
-    subtitle: 'Waste management company',
+    title: 'Where Objects Find Their Next Story',
+    subtitle: 'A circular exchange and repair service for Getliņi EKO\'s environmental education centre.',
     tags: ['Service Design', 'Blueprint', 'Research', 'Circular Economy'],
     accent: '#001EBB',
     year: '2024',
@@ -17,14 +17,17 @@ export const caseStudies = {
 
     challenge: [
       `Latvia needs to cut the amount of waste going to landfill from over 90% to 10% by 2030.`,
-      `Getliņi, one of the largest waste management facilities in Latvia, was planning a new education centre opening in 2025. They wanted a service inside it that could actually change how people think about the things they throw away.`,
-      `The motivation was never the problem. The design was.`,
+      `Getliņi, one of the largest waste management facilities in Latvia, was planning a new education centre to be built in its facility.`,
+      `The brief was to design an exchange and repair space that people could actually use on their own, something more functional and accessible than what already exists in Latvia and Europe, where items could come in, get displayed, and go home with someone new without needing a staff member to hold your hand through it.`,
+      `But the harder problem was not the space. Getting people to show up in the first place was the real design challenge. There was a gap between caring and doing. That is where most services fall apart.`,
     ],
 
     opportunity: [
-      `The problem with most sustainability services is that they sit at the edge of people's lives. You have to go out of your way to find them, and most people don't.`,
-      `Our research showed that 86% of people would skip an event if travel was inconvenient. So we designed around that reality instead of ignoring it.`,
-      `The goal was to make repair and exchange feel as accessible as buying something new — and more meaningful.`,
+      `Most people who care about sustainability already want to do something. The problem is that nothing makes it easy enough to actually follow through. And the nearest repair point is across the city. People are not sure what items they can even bring. And nothing about the experience feels worth the effort.`,
+      `Our research kept confirming the same thing.`,
+      `**86% of people would skip an event if travel was inconvenient.**`,
+      `**61% held onto objects they no longer used because of the memories attached to them.**`,
+      `So we reframed the opportunity: "**How do we not convince people to care, but how do we build a service that fits into the life they already have, and makes doing the right thing feel as easy and natural as doing nothing.**"`,
     ],
 
     siteVisitImages: [
@@ -62,12 +65,12 @@ export const caseStudies = {
       ],
       solutions: [
         {
-          title: 'Reboot — a hybrid exchange service',
+          title: 'Reboot: a hybrid exchange service',
           body: 'A service combining physical and digital touchpoints, bringing repair and exchange into everyday routines.',
         },
         {
           title: 'Mobile collection van',
-          body: 'Attached to Getliņi\'s existing Tuesday collection trucks — assessment and pickup at home, using infrastructure that already exists.',
+          body: 'Attached to Getliņi\'s existing Tuesday collection trucks. Assessment and pickup happen at home, using infrastructure that already exists.',
         },
         {
           title: 'Storytelling before donating',
@@ -116,24 +119,25 @@ export const caseStudies = {
     decisions: [
       {
         number: '01',
-        title: 'The Mobile Collection Van',
-        body: `Our research kept showing the same thing — 86% of people would skip an event if travel was inconvenient. So we proposed attaching a small Reboot van to Getliņi's existing garbage collection trucks, running on their Tuesday programme so objects are assessed and collected at home. The van uses infrastructure that already exists. It doesn't ask people to change their behaviour before they've experienced anything worth changing for.`,
-        artifact: 'Service blueprint — mobile touchpoint',
-        image: '/images/projects/getlini/about-workshop.jpg',
+        title: 'The Digital Pre-check',
+        body: `44% of people didn't know which items would be accepted at repair or exchange initiatives. That's a motivation problem disguised as a logistics problem. The app lets someone submit a photo and get an eligibility response before they've made any effort to travel. Remove the uncertainty at the entry point and more people begin the journey.`,
+        note: `Down the line, a Mobile Collection Van attached to Getliņi's existing Tuesday trucks could take this further. Objects assessed and collected at home, before anyone travels anywhere.`,
+        artifact: 'App prototype: pre-check screen',
+        image: '/images/projects/getlini/app-mocks.png',
       },
       {
         number: '02',
         title: 'The Storytelling Framework',
-        body: `I tested this in the workshop and 41% kept objects past their usefulness because of emotional attachment. Not because they wanted to. The Reboot app lets people add a short story or care tip before donating an object, turning an obligation into something that felt worth doing. This was the most contested decision in the team — and the one Getliņi responded to most strongly.`,
-        artifact: 'App prototype — story submission flow',
+        body: `I tested this in the workshop and 41% kept objects past their usefulness because of emotional attachment. Not because they wanted to. The Reboot app lets people add a short story or care tip before donating an object, turning an obligation into something that felt worth doing. This was the most contested decision in the team. It was also the one Getliņi responded to most strongly.`,
+        artifact: 'App prototype: story submission flow',
         image: '/images/projects/getlini/story-sharing.png',
       },
       {
         number: '03',
-        title: 'The Digital Pre-check',
-        body: `44% of people didn't know which items would be accepted at repair or exchange initiatives. That's a motivation problem disguised as a logistics problem. The app lets someone submit a photo and get an eligibility response before they've made any effort to travel. Remove the uncertainty at the entry point and more people begin the journey.`,
-        artifact: 'App prototype — pre-check screen',
-        image: '/images/projects/getlini/app-mocks.png',
+        title: 'The Object Value System',
+        body: `Not everything donated feels equal. A handmade chair carries more than a broken kettle. The credit system we designed reflects that. Donating something scores points weighted by condition, repairability, and the story attached. Those credits unlock access to objects in the exchange. It turns a one-sided transaction into a relationship. People aren't giving things away. They're trading within a community that values what they value.`,
+        artifact: 'Object value system',
+        image: '/images/projects/getlini/object-value-system.png',
       },
     ],
 
@@ -146,7 +150,7 @@ export const caseStudies = {
       {
         number: '02',
         title: 'The 2029 problem',
-        body: 'The physical centre doesn\'t open until 2029. We were designing a service with no venue, no established user base, and no current relationship between Getliņi and the communities it would serve. The digital layer wasn\'t optional — it was the only way to exist in the interim.',
+        body: 'The physical centre doesn\'t open until 2029. We were designing a service with no venue, no established user base, and no current relationship between Getliņi and the communities it would serve. The digital layer wasn\'t optional. It was the only way to exist in the interim.',
       },
       {
         number: '03',
@@ -156,11 +160,11 @@ export const caseStudies = {
       {
         number: '04',
         title: 'Defining what the blueprint needed to contain',
-        body: 'A service blueprint for something that doesn\'t exist yet is half design and half persuasion. It needs to show Getliņi what they would need to build, staff, maintain and fund — while still being a document they\'d actually use in a stakeholder meeting.',
+        body: 'A service blueprint for something that doesn\'t exist yet is half design and half persuasion. It needs to show Getliņi what they would need to build, staff, maintain and fund. It also needed to be a document they would actually use in a stakeholder meeting.',
       },
     ],
 
-    challengeReflection: `What I found hardest wasn't designing the service. It was holding confidence in the emotional design direction when it felt unproven. The storytelling feature was the most challenged decision in the room — it felt soft against the logistics and infrastructure concerns. The prototype numbers changed that conversation. 80% of testers said storytelling features would bring them back. That taught me something about when to argue from instinct and when to wait for evidence.`,
+    challengeReflection: `What I found hardest wasn't designing the service. It was holding confidence in the emotional design direction when it felt unproven. The storytelling feature was the most challenged decision in the room. It felt soft against the logistics and infrastructure concerns. The prototype numbers changed that conversation. 80% of testers said storytelling features would bring them back. That taught me something about when to argue from instinct and when to wait for evidence.`,
 
     process: [
       {
@@ -174,14 +178,14 @@ export const caseStudies = {
         number: '02',
         stage: 'Workshop',
         oneLiner: 'Co-creation with staff and community',
-        detail: 'I facilitated a session with Getliņi staff and community members. Halfway through we introduced an unplanned emotional mapping exercise — asking people how they feel at each stage of deciding what to do with a broken object. That surfaced the barrier that became the storytelling framework.',
+        detail: 'I facilitated a session with Getliņi staff and community members. Halfway through we introduced an unplanned emotional mapping exercise: asking people how they feel at each stage of deciding what to do with a broken object. That surfaced the barrier that became the storytelling framework.',
         image: '/images/projects/getlini/workshop-6spresso-01.JPEG',
       },
       {
         number: '03',
         stage: 'Blueprint',
         oneLiner: 'Making the service operational on paper',
-        detail: 'The service blueprint mapped every touchpoint across the Reboot ecosystem — mobile van, exchange station, digital pre-check, storytelling flow, and community membership. Built to be used in a Getliņi stakeholder meeting, not just reviewed as a deliverable.',
+        detail: 'The service blueprint mapped every touchpoint across the Reboot ecosystem: mobile van, exchange station, digital pre-check, storytelling flow, and community membership. Built to be used in a Getliņi stakeholder meeting, not just reviewed as a deliverable.',
         image: '/images/projects/getlini/service-blueprint.jpg',
       },
       {

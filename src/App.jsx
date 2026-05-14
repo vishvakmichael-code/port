@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { CursorProvider } from './components/cursor/CursorContext'
 import Cursor from './components/cursor/Cursor'
 import Navigation from './components/layout/Navigation'
@@ -13,12 +13,16 @@ import PageLoader from './components/layout/PageLoader'
 import { SVGFollower } from './components/ui/svg-follower'
 import { useLenis } from './hooks/useLenis'
 
+const FOLLOWER_ROUTES = ['/', '/about']
+
 function AppInner() {
   useLenis()
+  const { pathname } = useLocation()
+  const showFollower = FOLLOWER_ROUTES.includes(pathname)
 
   return (
     <PageLoader>
-      <SVGFollower />
+      {showFollower && <SVGFollower />}
       <Cursor />
       <Navigation />
       <PageTransition>

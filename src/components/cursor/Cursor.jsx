@@ -1,30 +1,35 @@
-import { useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useCursor } from './CursorContext'
 import { useIsTouch } from '../../hooks/useMediaQuery'
 
+const IDLE_MS = 1500
+
 export default function Cursor() {
   const isTouch = useIsTouch()
   const { spec } = useCursor()
+  const [visible, setVisible] = useState(false)
+  const idleTimer = useRef(null)
 
-  const rawX = useMotionValue(-100)
-  const rawY = useMotionValue(-100)
+  const rawX = useMotionValue(-200)
+  const rawY = useMotionValue(-200)
 
-  // Dot — instant follow
-  const dotX = useSpring(rawX, { stiffness: 1000, damping: 50, mass: 0.1 })
-  const dotY = useSpring(rawY, { stiffness: 1000, damping: 50, mass: 0.1 })
-
-  // Ring — lagged follow
-  const ringX = useSpring(rawX, { stiffness: 200, damping: 30, mass: 0.5 })
-  const ringY = useSpring(rawY, { stiffness: 200, damping: 30, mass: 0.5 })
+  const x = useSpring(rawX, { stiffness: 900, damping: 45, mass: 0.08 })
+  const y = useSpring(rawY, { stiffness: 900, damping: 45, mass: 0.08 })
 
   useEffect(() => {
-    const move = (e) => {
+    const onMove = (e) => {
       rawX.set(e.clientX)
       rawY.set(e.clientY)
+      setVisible(true)
+      clearTimeout(idleTimer.current)
+      idleTimer.current = setTimeout(() => setVisible(false), IDLE_MS)
     }
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
+    window.addEventListener('mousemove', onMove)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      clearTimeout(idleTimer.current)
+    }
   }, [rawX, rawY])
 
   useEffect(() => {
@@ -33,72 +38,31 @@ export default function Cursor() {
 
   if (isTouch) return null
 
-  const isTextState = spec.label === null && spec.dotSize === 2
+  /* Grow the dot when context signals an interactive element */
+  const isActive = spec.ringOpacity > 0 || spec.label !== null
 
   return (
-    <>
-      {/* DOT */}
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: dotX,
-          y: dotY,
-          translateX: '-50%',
-          translateY: '-50%',
-          borderRadius: '50%',
-          backgroundColor: 'var(--color-primary)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          mixBlendMode: 'difference',
-        }}
-        animate={{
-          width: spec.dotSize,
-          height: spec.dotSize,
-          opacity: spec.dotOpacity,
-        }}
-        transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
-      />
-
-      {/* RING */}
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: ringX,
-          y: ringY,
-          translateX: '-50%',
-          translateY: '-50%',
-          border: '1.5px solid var(--color-fg)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        animate={{
-          width: isTextState ? 2 : spec.ringSize,
-          height: isTextState ? 28 : spec.ringSize,
-          opacity: spec.ringOpacity,
-          borderRadius: isTextState ? '2px' : '50%',
-        }}
-        transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
-      >
-        {spec.label && (
-          <span style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '9px',
-            letterSpacing: 'var(--tracking-label)',
-            color: 'var(--color-fg)',
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-          }}>
-            {spec.label}
-          </span>
-        )}
-      </motion.div>
-    </>
+    <motion.div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        x,
+        y,
+        translateX: '-50%',
+        translateY: '-50%',
+        borderRadius: '50%',
+        backgroundColor: 'var(--color-primary)',
+        pointerEvents: 'none',
+        zIndex: 9999,
+        mixBlendMode: 'difference',
+      }}
+      animate={{
+        width:   isActive ? 10 : 4,
+        height:  isActive ? 10 : 4,
+        opacity: visible  ? 1  : 0,
+      }}
+      transition={{ duration: 0.18, ease: [0.25, 1, 0.5, 1] }}
+    />
   )
 }
